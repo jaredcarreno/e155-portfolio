@@ -1,0 +1,24 @@
+---
+title: "Lab 1"
+---
+
+<!-- ![](elephant.png){fig-alt="A drawing of an elephant." fig-align="left" width=20%} -->
+
+## Introduction
+
+## Design and Testing Methodology
+
+## Technical Documentation:
+
+### Block Diagram
+![This is a placeholder.](images/placeholder.png){fig-align="center" width=25%}
+
+### Schematic
+![This is a placeholder.](images/placeholder.png){fig-align="center" width=25%}
+
+## Results and Discussion
+
+### Testbench Simulation
+![This is a placeholder.](images/placeholder.png){fig-align="center" width=25%}
+
+### Conclusion

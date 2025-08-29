@@ -1,0 +1,93 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "E155 Portfolio",
+    "section": "",
+    "text": "Jared Carreño is a senior engineering major at Harvey Mudd College. He is most focused on electrical and mechanical design interested in exploring embedded systems and full system design."
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "E155 Portfolio",
+    "section": "",
+    "text": "Jared Carreño is a senior engineering major at Harvey Mudd College. He is most focused on electrical and mechanical design interested in exploring embedded systems and full system design."
+  },
+  {
+    "objectID": "posts/lab1.html",
+    "href": "posts/lab1.html",
+    "title": "Lab 1",
+    "section": "",
+    "text": "blah blah"
+  },
+  {
+    "objectID": "labs/lab1.html",
+    "href": "labs/lab1.html",
+    "title": "Lab 1",
+    "section": "",
+    "text": "blah blah"
+  },
+  {
+    "objectID": "labs/lab1/lab1.html",
+    "href": "labs/lab1/lab1.html",
+    "title": "Lab 1",
+    "section": "",
+    "text": "Introduction"
+  },
+  {
+    "objectID": "blog.html",
+    "href": "blog.html",
+    "title": "E155 Blog",
+    "section": "",
+    "text": "Hello Quarto\n\n\nWelcome to my Quarto portfolio\n\n\n\n\n\nAug 23, 2024\n\n\nJared Carreno\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "labs/lab1/lab1.html#block-diagram",
+    "href": "labs/lab1/lab1.html#block-diagram",
+    "title": "Lab 1",
+    "section": "Block Diagram",
+    "text": "Block Diagram"
+  },
+  {
+    "objectID": "labs/lab1/lab1.html#testbench-simulation",
+    "href": "labs/lab1/lab1.html#testbench-simulation",
+    "title": "Lab 1",
+    "section": "Testbench Simulation",
+    "text": "Testbench Simulation"
+  },
+  {
+    "objectID": "labs/lab1/lab1.html#schematic",
+    "href": "labs/lab1/lab1.html#schematic",
+    "title": "Lab 1",
+    "section": "Schematic",
+    "text": "Schematic"
+  },
+  {
+    "objectID": "labs/lab1/lab1.html#conclusion",
+    "href": "labs/lab1/lab1.html#conclusion",
+    "title": "Lab 1",
+    "section": "Conclusion",
+    "text": "Conclusion"
+  },
+  {
+    "objectID": "labs/lab1/lab1.html#design-and-testing-methodology",
+    "href": "labs/lab1/lab1.html#design-and-testing-methodology",
+    "title": "Lab 1",
+    "section": "Design and Testing Methodology",
+    "text": "Design and Testing Methodology"
+  },
+  {
+    "objectID": "labs/lab1/lab1.html#technical-documentation",
+    "href": "labs/lab1/lab1.html#technical-documentation",
+    "title": "Lab 1",
+    "section": "Technical Documentation:",
+    "text": "Technical Documentation:\n\nBlock Diagram\n\n\n\nThis is a placeholder.\n\n\n\n\nSchematic\n\n\n\nThis is a placeholder."
+  },
+  {
+    "objectID": "labs/lab1/lab1.html#results-and-discussion",
+    "href": "labs/lab1/lab1.html#results-and-discussion",
+    "title": "Lab 1",
+    "section": "Results and Discussion",
+    "text": "Results and Discussion\n\nTestbench Simulation\n\n\n\nThis is a placeholder.\n\n\n\n\nConclusion"
+  }
+]
