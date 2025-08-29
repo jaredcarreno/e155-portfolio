@@ -1,0 +1,14 @@
+---
+title: "E155 Portfolio"
+image: images/headshot.jpg
+about:
+    template: solana
+    links:
+        - icon: linkedin
+          text: LinkedIn
+          href: https://www.linkedin.com/in/jared-carreno   
+        - icon: github
+          text: GitHub
+          href: https://github.com/jaredcarreno
+---
+Jared Carreño is a senior engineering major at [Harvey Mudd College](https://hmc.edu). He is most focused on electrical and mechanical design interested in exploring embedded systems and full system design.
