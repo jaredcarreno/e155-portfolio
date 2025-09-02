@@ -14,6 +14,11 @@ As shown in Figure 1, a 4-input switch will control both the seven segment displ
 
 ![Figure 2. Calculation of how many cycles will produce a correct blinking frequency of 2.4 Hz.](images/cyclecalculation.png){fig-align="center" width=100%}
 
+As shown in Figure 2, calculations were performed to determine how many cycles our counter would need to count to before turning off and then back on. It was determined that for 10,000,000 cycles our LED would have to be off and then on for another 10,000,000 cycles.
+
+![Figure 3. Calculation of resistors to safely operate LEDs in the seven segment display.](images/resistorcalculation.png){fig-align="center" width=100%}
+
+As mentioned earlier, it was important to have resistors that limit the amount of current passing through our LEDs, so the appropriate resistance was calculated using the typical operating current and forward voltage (as shown in Figure 3). It is important to note that these calculations were made using an input voltage of 5V, instead of the required 3.3V, since there were difficulties getting adequate voltage out of the UPduino's 3.3V pin. As shown in the top half of the Figure, it is recommended to use a resistor valued at 122 ohms or greater. Given that 1000 ohm resistors were used, the actual calculations would follow the bottom half of Figure 3.
 ## Technical Documentation:
 
 ### Block Diagram
