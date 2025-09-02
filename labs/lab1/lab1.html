@@ -161,8 +161,9 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#results-and-discussion" id="toc-results-and-discussion" class="nav-link" data-scroll-target="#results-and-discussion">Results and Discussion</a>
   <ul class="collapse">
   <li><a href="#testbench-simulation" id="toc-testbench-simulation" class="nav-link" data-scroll-target="#testbench-simulation">Testbench Simulation</a></li>
-  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#ai-prototype-summary" id="toc-ai-prototype-summary" class="nav-link" data-scroll-target="#ai-prototype-summary">AI Prototype Summary</a></li>
   </ul>
 </nav>
     </div>
@@ -191,29 +192,54 @@ ul.task-list li input[type="checkbox"] {
 <!-- ![](elephant.png){fig-alt="A drawing of an elephant." fig-align="left" width=20%} -->
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>Lab 1 was focused on setting up, testing, and getting familiarized with the UPduino v3.1 FPGA and Nucleo-L432KC development boards. This lab entailed soldering all the necessary components and headers onto the provided E155 development board, programming the MCU and FPGA boards with Segger Embedded Studio and Radiant Lattice, respectively, and creating modules that can control LEDs and an external seven segment display. The functionality of the design portion was verified using both simulation and hardware.</p>
 </section>
 <section id="design-and-testing-methodology" class="level2">
 <h2 class="anchored" data-anchor-id="design-and-testing-methodology">Design and Testing Methodology</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/lab1_truthtable.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Figure 1. Truth table relating switch inputs to LEDs and seven segment display.</figcaption>
+</figure>
+</div>
+<p>As shown in Figure 1, a 4-input switch will control both the seven segment display and 2 separate LEDs. The seven segment display consists of 7 LEDs that each correspond to a segment. Since the display is a common anode display, each segment will be activated when the GPIO pin that it is connected to is pulled to 0V, meaning that a value of 0 will indicate that a segment is ON. All the diodes’ anodes will be connected to 3.3V that comes directly from the UPduino, while the cathode will be connected to a GPIO pin and a current-limiting resistor. Combinational logic was used to drive LEDs 0 and 1, where <code>led[0] = s[0] ^ s[1]</code> and <code>led[1] = s[2] &amp; s[3]</code>, while LED 2 was set to constantly blink at a frequency of 2.4 Hz. This was done through the use of the built-in HSOSC (high speed oscillator) that was set to 48 MHz then divided to match the correct blinking frequency.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/cyclecalculation.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Figure 2. Calculation of how many cycles will produce a correct blinking frequency of 2.4 Hz.</figcaption>
+</figure>
+</div>
+<p>As shown in Figure 2, calculations were performed to determine how many cycles our counter would need to count to before turning off and then back on. It was determined that for 10,000,000 cycles our LED would have to be off and then on for another 10,000,000 cycles.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/resistorcalculations.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Figure 3. Calculation of resistors to safely operate LEDs in the seven segment display.</figcaption>
+</figure>
+</div>
+<p>As mentioned earlier, it was important to have resistors that limit the amount of current passing through our LEDs, so the appropriate resistance was calculated using the typical operating current and forward voltage (as shown in Figure 3). It is important to note that these calculations were made using an input voltage of 5V, instead of the required 3.3V, since there were difficulties getting adequate voltage out of the UPduino’s 3.3V pin. As shown in the top half of the Figure, it is recommended to use a resistor valued at 122 ohms or greater. Given that 1000 ohm resistors were used, the actual calculations would follow the bottom half of Figure 3.</p>
 </section>
 <section id="technical-documentation" class="level2">
 <h2 class="anchored" data-anchor-id="technical-documentation">Technical Documentation:</h2>
+<p>The Git repository containing the source code of this lab can be found here: <a href="https://github.com/jaredcarreno/e155-lab1">Lab 1 Repo</a>.</p>
 <section id="block-diagram" class="level3">
 <h3 class="anchored" data-anchor-id="block-diagram">Block Diagram</h3>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/placeholder.png" class="img-fluid figure-img" style="width:25.0%"></p>
-<figcaption>This is a placeholder.</figcaption>
+<p><img src="images/lab1blockdiagram.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Figure 4. Block diagram visualizing lab1_jc and seven_segment modules.</figcaption>
 </figure>
 </div>
+<p>The block diagram shown in Figure 4 showcases the different modules and how they interact within the top level module. There are two inputs, <code>s[3:0]</code> and <code>reset</code>, an HSOSC module that is used to generate the clock, a counter that is used to blink LED 2, a <code>seven_segment</code> module containing all the combinational logic for the seven segment display, and combinational logic that is controlling LEDs 0 and 1.</p>
 </section>
 <section id="schematic" class="level3">
 <h3 class="anchored" data-anchor-id="schematic">Schematic</h3>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/placeholder.png" class="img-fluid figure-img" style="width:25.0%"></p>
-<figcaption>This is a placeholder.</figcaption>
+<p><img src="images/lab1schematic.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Figure 5. Schematic of the hardware level implementation used to verify operation, where R = 1k ohms.</figcaption>
 </figure>
 </div>
+<p>The schematic shown in Figure 5 demonstrates the hardware setup used to verify the functionality of our modules. It showcases the switches utilized to control the seven segment display and LEDs, and how it maps to the physical GPIO pins on the UPduino. The schematic illustrates the use of 1000 ohm resistors to limit the current through both the onboard LEDs and the seven segment display’s LEDs.</p>
 </section>
 </section>
 <section id="results-and-discussion" class="level2">
@@ -222,16 +248,35 @@ ul.task-list li input[type="checkbox"] {
 <h3 class="anchored" data-anchor-id="testbench-simulation">Testbench Simulation</h3>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/placeholder.png" class="img-fluid figure-img" style="width:25.0%"></p>
-<figcaption>This is a placeholder.</figcaption>
+<p><img src="images/lab1_testbench.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Figure 6. Simulation of lab1_jc module used to verify operation.</figcaption>
 </figure>
 </div>
+<p>Figure 6 showcases the simulation of the <code>lab1_jc</code> module that is responsible for controlling both the LEDs and seven segment display. As we can see, the simulation managed to pass all 16 of the test vectors, meaning it was a successful implementation. As shown in Figure 6, the values of <code>seg</code> and <code>led</code> match their expected values, <code>seg_expected</code> and <code>led_expected</code>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/sevensegment_testbench.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Figure 7. Simulation of seven_segment module used to verify operation.</figcaption>
+</figure>
+</div>
+<p>Figure 7 showcases the simulation of the <code>seven_segment</code> module that is responsible for controlling the seven segment display. As we can see, the simulation managed to pass all 16 of the test vectors, meaning it was a successful implementation. As shown in Figure 6, the value of <code>seg</code> matches the value of <code>seg_expected</code>.</p>
 </section>
-<section id="conclusion" class="level3">
-<h3 class="anchored" data-anchor-id="conclusion">Conclusion</h3>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>The design successfully blinked <code>led[2]</code> using the on-board HSOSC and controlled the seven segment display, as well as <code>led[1]</code> and <code>led[0]</code> using the 4-input dip switch. Both of the testbenches that were created for their respective modules yielded great success. I spent 10+ hours working on this lab.</p>
+</section>
+<section id="ai-prototype-summary" class="level2">
+<h2 class="anchored" data-anchor-id="ai-prototype-summary">AI Prototype Summary</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/AIresponse.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>AI Response</figcaption>
+</figure>
+</div>
+<p>Comparing this with my own module that controls the blinking of LED 2, it is immediately clear that the syntax and structure that the LLM utilizes is not easy to read. After attempting to synthesize, the design failed immediately. The AI was unable to successfully instantiate the HSOSC module that is utilized to generate the clock. Feeding the LLM the error message, it suggested that I reorder the inputs to the HSOSC module that it attempted to instantiate. Again, this didn’t work as it should be something like: <code>HSOSC hf_osc (.CLKHFPU(1'b1), .CLKHFEN(1'b1), .CLKHF(clk));</code>. You would imagine that an LLM would be able to catch this simple of an issue, but it struggles. A majority of the code that the LLM produced is hard to read and/or wrong. There is also the use of language that I do not totally understand, since I am still somewhat new to Verilog. This leads me to believe there is some form of overcompensation and the LLM is making it unnecessarily complicated, since this isn’t exactly a complicated module to write. It’s shocking that the LLM is performing so terribly, but this may be due to the data that it is trained on.</p>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
