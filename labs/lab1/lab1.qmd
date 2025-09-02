@@ -8,6 +8,11 @@ title: "Lab 1"
 Lab 1 was focused on setting up, testing, and getting familiarized with the UPduino v3.1 FPGA and Nucleo-L432KC development boards. This lab entailed soldering all the necessary components and headers onto the provided E155 development board, programming the MCU and FPGA boards with Segger Embedded Studio and Radiant Lattice, respectively, and creating modules that can control LEDs and an external seven segment display. The functionality of the design portion was verified using both simulation and hardware.
 
 ## Design and Testing Methodology
+![Figure 1. Truth table relating switch inputs to LEDs and seven segment display.](images/lab1_truthtable.png){fig-align="center" width=100%}
+
+As shown in Figure 1, a 4-input switch will control both the seven segment display and 2 separate LEDs. The seven segment display consists of 7 LEDs that each correspond to a segment. Since the display is a common anode display, each segment will be activated when the GPIO pin that it is connected to is pulled to 0V, meaning that a value of 0 will indicate that a segment is ON. All the diodes' anodes will be connected to 3.3V that comes directly from the UPduino, while the cathode will be connected to a GPIO pin and a current-limiting resistor. Combinational logic was used to drive LEDs 0 and 1, where led[0] = s[0] ^ s[1] and led[1] = s[2] & s[3], while LED 2 was set to constantly blink at a frequency of 2.4 Hz. This was done through the use of the HSOSC (high speed oscillator) built into the iCE40UP library that was then divided to match the correct frequency.
+
+![Figure 2. Calculation of how many cycles will produce a correct blinking frequency of 2.4 Hz.](images/cyclecalculation.png){fig-align="center" width=100%}
 
 ## Technical Documentation:
 
