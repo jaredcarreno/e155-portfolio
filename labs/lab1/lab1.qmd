@@ -5,6 +5,7 @@ title: "Lab 1"
 <!-- ![](elephant.png){fig-alt="A drawing of an elephant." fig-align="left" width=20%} -->
 
 ## Introduction
+Lab 1 was focused on setting up, testing, and getting familiarized with the UPduino v3.1 FPGA and Nucleo-L432KC development boards. This lab entailed soldering all the necessary components and headers onto the provided E155 development board, programming the MCU and FPGA boards with Segger Embedded Studio and Radiant Lattice, respectively, and creating modules that can control LEDs and an external seven segment display. The functionality of the design portion was verified using both simulation and hardware.
 
 ## Design and Testing Methodology
 
