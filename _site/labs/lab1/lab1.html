@@ -41,8 +41,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../../site_libs/bootstrap/bootstrap-e31584831b205ffbb2d98406f31c2a5b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
-<script src="../../site_libs/quarto-contrib/videojs/video.min.js"></script>
-<link href="../../site_libs/quarto-contrib/videojs/video-js.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -266,11 +264,17 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
-<div class="quarto-video"><video id="video_shortcode_videojs_video1" class="video-js vjs-default-skin vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="lab1video.mp4"></video></div>
-<p>The design successfully blinked <code>led[2]</code> using the on-board HSOSC and controlled the seven segment display, as well as <code>led[1]</code> and <code>led[0]</code> using the 4-input dip switch. Both of the testbenches that were created for their respective modules yielded great success. The video above showcases the successful operation of the design once programmed onto the UPduino. I spent 10+ hours working on this lab.</p>
+<p>The design successfully blinked <code>led[2]</code> using the on-board HSOSC and controlled the seven segment display, as well as <code>led[1]</code> and <code>led[0]</code> using the 4-input dip switch. Both of the testbenches that were created for their respective modules yielded great success. I spent 10+ hours working on this lab.</p>
 </section>
 <section id="ai-prototype-summary" class="level2">
 <h2 class="anchored" data-anchor-id="ai-prototype-summary">AI Prototype Summary</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/AIresponse.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>AI Response</figcaption>
+</figure>
+</div>
+<p>Comparing this with my own module that controls the blinking of LED 2, it is immediately clear that the syntax and structure that the LLM utilizes is not easy to read. After attempting to synthesize, the design failed immediately. The AI was unable to successfully instantiate the HSOSC module that is utilized to generate the clock. Feeding the LLM the error message, it suggested that I reorder the inputs to the HSOSC module that it attempted to instantiate. Again, this didn’t work as it should be something like: <code>HSOSC hf_osc (.CLKHFPU(1'b1), .CLKHFEN(1'b1), .CLKHF(clk));</code>. You would imagine that an LLM would be able to catch this simple of an issue, but it struggles. A majority of the code that the LLM produced is hard to read and/or wrong. There is also the use of language that I do not totally understand, since I am still somewhat new to Verilog. This leads me to believe there is some form of overcompensation and the LLM is making it unnecessarily complicated, since this isn’t exactly a complicated module to write. It’s shocking that the LLM is performing so terribly, but this may be due to the data that it is trained on.</p>
 
 
 </section>
@@ -676,7 +680,6 @@ ul.task-list li input[type="checkbox"] {
   });
   </script>
 </div> <!-- /content -->
-<script>videojs(video_shortcode_videojs_video1);</script>
 
 
 

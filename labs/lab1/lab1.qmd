@@ -45,9 +45,9 @@ Figure 6 showcases the simulation of the `lab1_jc` module that is responsible fo
 Figure 7 showcases the simulation of the `seven_segment` module that is responsible for controlling the seven segment display. As we can see, the simulation managed to pass all 16 of the test vectors, meaning it was a successful implementation. As shown in Figure 6, the value of `seg` matches the value of `seg_expected`.
 
 ## Conclusion
-
-{{< video lab1video.mp4 >}}
-
-The design successfully blinked `led[2]` using the on-board HSOSC and controlled the seven segment display, as well as `led[1]` and `led[0]` using the 4-input dip switch. Both of the testbenches that were created for their respective modules yielded great success. The video above showcases the successful operation of the design once programmed onto the UPduino. I spent 10+ hours working on this lab.
+The design successfully blinked `led[2]` using the on-board HSOSC and controlled the seven segment display, as well as `led[1]` and `led[0]` using the 4-input dip switch. Both of the testbenches that were created for their respective modules yielded great success. I spent 10+ hours working on this lab.
 
 ## AI Prototype Summary
+![AI Response](images/AIresponse.png){fig-align="center" width=100%}
+
+Comparing this with my own module that controls the blinking of LED 2, it is immediately clear that the syntax and structure that the LLM utilizes is not easy to read. After attempting to synthesize, the design failed immediately. The AI was unable to successfully instantiate the HSOSC module that is utilized to generate the clock. Feeding the LLM the error message, it suggested that I reorder the inputs to the HSOSC module that it attempted to instantiate. Again, this didn't work as it should be something like: `HSOSC hf_osc (.CLKHFPU(1'b1), .CLKHFEN(1'b1), .CLKHF(clk));`. You would imagine that an LLM would be able to catch this simple of an issue, but it struggles. A majority of the code that the LLM produced is hard to read and/or wrong. There is also the use of language that I do not totally understand, since I am still somewhat new to Verilog. This leads me to believe there is some form of overcompensation and the LLM is making it unnecessarily complicated, since this isn't exactly a complicated module to write. It's shocking that the LLM is performing so terribly, but this may be due to the data that it is trained on.
