@@ -1,3 +1,37 @@
 ---
 title: "Lab 2"
 ---
+
+<!-- ![](elephant.png){fig-alt="A drawing of an elephant." fig-align="left" width=20%} -->
+
+## Introduction
+
+
+## Design and Testing Methodology
+![Figure 1. Truth table relating switch inputs to LEDs and seven segment display.](images/lab1_truthtable.png){fig-align="center" width=100%}
+
+
+![Figure 2. Calculation of how many cycles will produce a correct blinking frequency of 2.4 Hz.](images/cyclecalculation.png){fig-align="center" width=100%}
+
+![Figure 3. Calculation of resistors to safely operate LEDs in the seven segment display.](images/resistorcalculations.png){fig-align="center" width=100%}
+
+## Technical Documentation:
+The Git repository containing the source code of this lab can be found here: [Lab 1 Repo](https://github.com/jaredcarreno/e155-lab1).
+
+### Block Diagram
+![Figure 4. Block diagram visualizing lab1_jc and seven_segment modules.](images/lab1blockdiagram.png){fig-align="center" width=100%}
+
+### Schematic
+![Figure 5. Schematic of the hardware level implementation used to verify operation, where R = 1k ohms.](images/lab1schematic.png){fig-align="center" width=100%}
+
+## Results and Discussion
+
+### Testbench Simulation
+![Figure 6. Simulation of lab1_jc module used to verify operation.](images/lab1_testbench.png){fig-align="center" width=100%}
+
+![Figure 7. Simulation of seven_segment module used to verify operation.](images/sevensegment_testbench.png){fig-align="center" width=100%}
+
+## Conclusion
+
+## AI Prototype Summary
+![AI Response](images/AIresponse.png){fig-align="center" width=100%}
