@@ -146,8 +146,26 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#design-and-testing-methodology" id="toc-design-and-testing-methodology" class="nav-link" data-scroll-target="#design-and-testing-methodology">Design and Testing Methodology</a></li>
+  <li><a href="#technical-documentation" id="toc-technical-documentation" class="nav-link" data-scroll-target="#technical-documentation">Technical Documentation:</a>
+  <ul class="collapse">
+  <li><a href="#block-diagram" id="toc-block-diagram" class="nav-link" data-scroll-target="#block-diagram">Block Diagram</a></li>
+  <li><a href="#schematic" id="toc-schematic" class="nav-link" data-scroll-target="#schematic">Schematic</a></li>
+  </ul></li>
+  <li><a href="#results-and-discussion" id="toc-results-and-discussion" class="nav-link" data-scroll-target="#results-and-discussion">Results and Discussion</a>
+  <ul class="collapse">
+  <li><a href="#testbench-simulation" id="toc-testbench-simulation" class="nav-link" data-scroll-target="#testbench-simulation">Testbench Simulation</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul></li>
+  <li><a href="#ai-prototype-summary" id="toc-ai-prototype-summary" class="nav-link" data-scroll-target="#ai-prototype-summary">AI Prototype Summary</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -171,8 +189,84 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<!-- ![](elephant.png){fig-alt="A drawing of an elephant." fig-align="left" width=20%} -->
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>In Lab 2, we used a setup similar to the one used in lab 1. This time, however, the goal was to power and program a switch-controlled dual seven-segment display using time-multiplexing and have 5 LEDs that form a binary representation of the sum of the independent switches controlling each display. Thanks to time-multiplexing, the two displays could be powered using the same number of GPIO pins by rapidly switching which display is actively getting powered at rate that makes the displays appear static to our eyes.</p>
+</section>
+<section id="design-and-testing-methodology" class="level2">
+<h2 class="anchored" data-anchor-id="design-and-testing-methodology">Design and Testing Methodology</h2>
+<p>Since this is functionally the same as what was done in lab 1 – controlling a display with a 4-bit input/switch – the <code>seven_segment</code> module from lab 1 could be reused, as long as the inputs rapidly switch according to the mux’s enable signal. Utilizing the same on-board high-speed oscillator (<code>HSOSC</code>) module that was used in lab 1, the clock signal was divided in order to drive the rate at which power is switched between displays. Using a 25-bit clock that is driven by the <code>HSOSC</code>’s clock signal, the mux module focuses on a specific bit of the clock in order to control the output of the mux, and the value of the enable signals, <code>enable[0]</code> and <code>enable[1]</code>. In this case, it was experimentally determined that the 18th bit of the counter, <code>counter[18]</code>, allowed for the displays to appear static without any bleeding. Using two 2N3906 PNP transistors, the current could be selectively sent to one display at a time. Using GPIO pins, <code>enable[0]</code> and <code>enable[1]</code> were each sent to the base of an individual transistor, with the collector of the transistors each being routed to the power pins of one of the displays (more clearly shown in Figure 2).</p>
+<p>Depending on the value of <code>counter[18]</code>, the mux within the mux module will output a 4-bit value, s, which will be equal to either s1 or s2 (which are 4-bit values controlled by independent switches), while the mux module updates the value of <code>enable[0]</code> and <code>enable[1]</code>. These changes are dictated by <code>enable[0] = counter[18]</code>, <code>enable[1] = ~counter[18]</code>, and <code>s = counter[18] ? s1 : s2</code>. In the top module, <code>lab2_jc</code>, the clock is generated using the <code>HSOSC</code> module then fed into the mux. The output, s, of the instantiated mux module is then fed into the <code>seven_segment</code> module that then decodes the value of s into its corresponding segments. These are then via GPIO to the display itself. The top module is also responsible for handling the sum of the two inputs, s1 and s2, which it then assigns to led[4:0]. It is important to note that the values of s1 and s2 control display 0 and 1, respectively.</p>
+</section>
+<section id="technical-documentation" class="level2">
+<h2 class="anchored" data-anchor-id="technical-documentation">Technical Documentation:</h2>
+<p>The Git repository containing the source code of this lab can be found here: <a href="https://github.com/jaredcarreno/e155-lab2.git">Lab 2 Repo</a>.</p>
+<section id="block-diagram" class="level3">
+<h3 class="anchored" data-anchor-id="block-diagram">Block Diagram</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/lab2_blockdiagram.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Figure 1. Block diagram visualizing lab2_jc, seven_segment, and mux modules.</figcaption>
+</figure>
+</div>
+<p>The block diagram shown in Figure 3 showcases the hierarchy and modules within the top level module, <code>lab2_jc</code>. This includes 3 submodules: <code>HSOSC</code>, <code>mux</code>, and <code>seven_segment</code>. An adder is also present since the top level module handles the sum of the two inputs.</p>
+</section>
+<section id="schematic" class="level3">
+<h3 class="anchored" data-anchor-id="schematic">Schematic</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/lab2_schematic.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Figure 2. Schematic of the hardware level implementation used to verify operation.</figcaption>
+</figure>
+</div>
+<p>As shown in Figure 2, the hardware used included: two 4-input dip switches, the UPduino, resistors for the base, seven segment display, and green LEDs, as well as the dual seven segment display itself. Pin assignments are also shown and the value the represent are also shown in the schematic.</p>
+</section>
+</section>
+<section id="results-and-discussion" class="level2">
+<h2 class="anchored" data-anchor-id="results-and-discussion">Results and Discussion</h2>
+<section id="testbench-simulation" class="level3">
+<h3 class="anchored" data-anchor-id="testbench-simulation">Testbench Simulation</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/lab2_testbench.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Figure 3. Simulation of lab2_jc module used to verify operation.</figcaption>
+</figure>
+</div>
+<p>As shown in Figure 3, the lab 2 workbench successfully demonstrated that the addition of the two input signals, s1 and s2, worked, as well as the switching of the enable signal.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/mux_testbench.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Figure 4. Simulation of mux module used to verify operation.</figcaption>
+</figure>
+</div>
+<p>As shown in Figure 4, the mux testbench successfully demonstrated that the right output is provided given that <code>enable[0]</code> or <code>enable[1]</code> is high or low.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/sevensegment_testbench.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Figure 5. Simulation of seven_segment module used to verify operation.</figcaption>
+</figure>
+</div>
+<p>As shown in Figure 5, the seven_segment module successfully passed all the test vectors!</p>
+</section>
+<section id="conclusion" class="level3">
+<h3 class="anchored" data-anchor-id="conclusion">Conclusion</h3>
+<p>It appears that we were able to successfully control a dual seven segment display and 5 LEDs using two 4-input dip switches and time-multiplexing. Both of the testbenches ran and provided information that indicates that implementation was successful. I spent 20+ hours working on this lab.</p>
+</section>
+</section>
+<section id="ai-prototype-summary" class="level2">
+<h2 class="anchored" data-anchor-id="ai-prototype-summary">AI Prototype Summary</h2>
+<p><img src="images/time_mux_1.png" class="img-fluid quarto-figure quarto-figure-center" style="width:100.0%"> <img src="images/time_mux_2.png" class="img-fluid quarto-figure quarto-figure-center" style="width:100.0%"> <img src="images/time_mux_3.png" class="img-fluid quarto-figure quarto-figure-center" style="width:100.0%"></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/AI_PROTOTYPE_DUAL_DISPLAY-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Figure 6. AI developed modules</figcaption>
+</figure>
+</div>
+<p>After prompting ChatGPT, it created the modules shown in Figure 6.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
