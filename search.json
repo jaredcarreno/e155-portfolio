@@ -39,7 +39,7 @@
     "href": "labs/lab2/lab2.html#ai-prototype-summary",
     "title": "Lab 2",
     "section": "AI Prototype Summary",
-    "text": "AI Prototype Summary\n  \n\n\n\nFigure 6. AI developed modules\n\n\nAfter prompting ChatGPT, it created the modules shown in Figure 6."
+    "text": "AI Prototype Summary\n  \n\n\n\nFigure 6. AI developed modules\n\n\nAfter prompting ChatGPT, it created the modules shown in Figure 6. The modules were able to compile successfully, but after a closer look, it was apparent that our approaches were slightly different, but I wasn’t entirely disappointed by the result. There are differences in syntax and the use of generate statements that I am not entirely familiar with, but the logic seems fine to me. It seems that they chose to utilize the positive and negative edges of the clock for the time-multiplexing, which is another apporoach I was thinking of when I began to develop my modules."
   },
   {
     "objectID": "index.html",
