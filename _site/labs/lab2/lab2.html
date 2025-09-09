@@ -233,24 +233,25 @@ ul.task-list li input[type="checkbox"] {
 <figcaption>Figure 3. Simulation of lab2_jc module used to verify operation.</figcaption>
 </figure>
 </div>
-<p>The lab 2 workbench successfully demonstrated that the addition of the two input signals, s1 and s2, worked, as well as the switching of the enable signal.</p>
+<p>As shown in Figure 3, the lab 2 workbench successfully demonstrated that the addition of the two input signals, s1 and s2, worked, as well as the switching of the enable signal.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/mux_testbench.png" class="img-fluid figure-img" style="width:100.0%"></p>
 <figcaption>Figure 4. Simulation of mux module used to verify operation.</figcaption>
 </figure>
 </div>
-<p>The mux testbench successfully demonstrated that the right output is provided given that <code>enable[0]</code> or <code>enable[1]</code> is high or low.</p>
+<p>As shown in Figure 4, the mux testbench successfully demonstrated that the right output is provided given that <code>enable[0]</code> or <code>enable[1]</code> is high or low.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/sevensegment_testbench.png" class="img-fluid figure-img" style="width:100.0%"></p>
 <figcaption>Figure 5. Simulation of seven_segment module used to verify operation.</figcaption>
 </figure>
 </div>
-<p>The seven_segment module successfully passed all the test vectors!</p>
+<p>As shown in Figure 5, the seven_segment module successfully passed all the test vectors!</p>
 </section>
 <section id="conclusion" class="level3">
 <h3 class="anchored" data-anchor-id="conclusion">Conclusion</h3>
+<p>It appears that we were able to successfully control a dual seven segment display and 5 LEDs using two 4-input dip switches and time-multiplexing. Both of the testbenches ran and provided information that indicates that implementation was successful. I spent 20+ hours working on this lab.</p>
 </section>
 </section>
 <section id="ai-prototype-summary" class="level2">
@@ -259,9 +260,10 @@ ul.task-list li input[type="checkbox"] {
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/AI_PROTOTYPE_DUAL_DISPLAY-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption>AI Response</figcaption>
+<figcaption>Figure 6. AI developed modules</figcaption>
 </figure>
 </div>
+<p>After prompting ChatGPT, it created the modules shown in Figure 6. The modules were able to compile successfully, but after a closer look, it was apparent that our approaches were slightly different, but I wasn’t entirely disappointed by the result. There are differences in syntax and the use of <code>generate</code> statements that I am not entirely familiar with, but the logic seems fine to me. It seems that they chose to utilize the positive and negative edges of the clock for the time-multiplexing, which is another apporoach I was thinking of when I began to develop my modules.</p>
 
 
 </section>
@@ -339,7 +341,7 @@ ul.task-list li input[type="checkbox"] {
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/jaredcarreno\.github\.io\/e155-portfolio\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
