@@ -6,30 +6,25 @@ title: "Lab 2"
 
 ## Introduction
 
-
 ## Design and Testing Methodology
-![Figure 1. Truth table relating switch inputs to LEDs and seven segment display.](images/lab1_truthtable.png){fig-align="center" width=100%}
-
-
-![Figure 2. Calculation of how many cycles will produce a correct blinking frequency of 2.4 Hz.](images/cyclecalculation.png){fig-align="center" width=100%}
-
-![Figure 3. Calculation of resistors to safely operate LEDs in the seven segment display.](images/resistorcalculations.png){fig-align="center" width=100%}
 
 ## Technical Documentation:
-The Git repository containing the source code of this lab can be found here: [Lab 1 Repo](https://github.com/jaredcarreno/e155-lab1).
+The Git repository containing the source code of this lab can be found here: [Lab 2 Repo](https://github.com/jaredcarreno/e155-lab2.git).
 
 ### Block Diagram
-![Figure 4. Block diagram visualizing lab1_jc and seven_segment modules.](images/lab1blockdiagram.png){fig-align="center" width=100%}
+![Figure 1. Block diagram visualizing lab2_jc, seven_segment, and mux modules.](images/lab2_blockdiagram.png){fig-align="center" width=100%}
 
 ### Schematic
-![Figure 5. Schematic of the hardware level implementation used to verify operation, where R = 1k ohms.](images/lab1schematic.png){fig-align="center" width=100%}
+![Figure 2. Schematic of the hardware level implementation used to verify operation.](images/lab2_schematic.png){fig-align="center" width=100%}
 
 ## Results and Discussion
 
 ### Testbench Simulation
-![Figure 6. Simulation of lab1_jc module used to verify operation.](images/lab1_testbench.png){fig-align="center" width=100%}
+![Figure 3. Simulation of lab2_jc module used to verify operation.](images/lab2_testbench.png){fig-align="center" width=100%}
 
-![Figure 7. Simulation of seven_segment module used to verify operation.](images/sevensegment_testbench.png){fig-align="center" width=100%}
+![Figure 4. Simulation of mux module used to verify operation.](images/mux_testbench.png){fig-align="center" width=100%}
+
+![Figure 5. Simulation of seven_segment module used to verify operation.](images/sevensegment_testbench.png){fig-align="center" width=100%}
 
 ## Conclusion
 
