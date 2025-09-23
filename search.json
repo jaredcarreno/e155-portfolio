@@ -103,5 +103,33 @@
     "title": "Lab 1",
     "section": "AI Prototype Summary",
     "text": "AI Prototype Summary\n\n\n\nAI Response\n\n\nComparing this with my own module that controls the blinking of LED 2, it is immediately clear that the syntax and structure that the LLM utilizes is not easy to read. After attempting to synthesize, the design failed immediately. The AI was unable to successfully instantiate the HSOSC module that is utilized to generate the clock. Feeding the LLM the error message, it suggested that I reorder the inputs to the HSOSC module that it attempted to instantiate. Again, this didn’t work as it should be something like: HSOSC hf_osc (.CLKHFPU(1'b1), .CLKHFEN(1'b1), .CLKHF(clk));. You would imagine that an LLM would be able to catch this simple of an issue, but it struggles. A majority of the code that the LLM produced is hard to read and/or wrong. There is also the use of language that I do not totally understand, since I am still somewhat new to Verilog. This leads me to believe there is some form of overcompensation and the LLM is making it unnecessarily complicated, since this isn’t exactly a complicated module to write. It’s shocking that the LLM is performing so terribly, but this may be due to the data that it is trained on."
+  },
+  {
+    "objectID": "labs/lab3/lab3.html#design-and-testing-methodology",
+    "href": "labs/lab3/lab3.html#design-and-testing-methodology",
+    "title": "Lab 3",
+    "section": "Design and Testing Methodology",
+    "text": "Design and Testing Methodology"
+  },
+  {
+    "objectID": "labs/lab3/lab3.html#technical-documentation",
+    "href": "labs/lab3/lab3.html#technical-documentation",
+    "title": "Lab 3",
+    "section": "Technical Documentation:",
+    "text": "Technical Documentation:\nThe Git repository containing the source code of this lab can be found here: Lab 3 Repo.\n\nBlock Diagram\n\n\n\nFigure 1. Block diagram visualizing lab2_jc, seven_segment, and mux modules.\n\n\n\n\nSchematic\n\n\n\nFigure 2. Schematic of the hardware level implementation used to verify operation."
+  },
+  {
+    "objectID": "labs/lab3/lab3.html#results-and-discussion",
+    "href": "labs/lab3/lab3.html#results-and-discussion",
+    "title": "Lab 3",
+    "section": "Results and Discussion",
+    "text": "Results and Discussion\n\nTestbench Simulation\n\n\n\nFigure 3. Simulation of lab2_jc module used to verify operation.\n\n\n\n\n\nFigure 4. Simulation of mux module used to verify operation.\n\n\n\n\n\nFigure 5. Simulation of seven_segment module used to verify operation.\n\n\n\n\nConclusion"
+  },
+  {
+    "objectID": "labs/lab3/lab3.html#ai-prototype-summary",
+    "href": "labs/lab3/lab3.html#ai-prototype-summary",
+    "title": "Lab 3",
+    "section": "AI Prototype Summary",
+    "text": "AI Prototype Summary\n  \n\n\n\nFigure 6. AI developed modules"
   }
 ]
