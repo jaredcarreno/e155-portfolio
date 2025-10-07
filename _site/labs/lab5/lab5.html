@@ -146,8 +146,30 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#design-and-testing-methodology" id="toc-design-and-testing-methodology" class="nav-link" data-scroll-target="#design-and-testing-methodology">Design and Testing Methodology</a>
+  <ul class="collapse">
+  <li><a href="#interrupts" id="toc-interrupts" class="nav-link" data-scroll-target="#interrupts">Interrupts</a></li>
+  </ul></li>
+  <li><a href="#technical-documentation" id="toc-technical-documentation" class="nav-link" data-scroll-target="#technical-documentation">Technical Documentation:</a>
+  <ul class="collapse">
+  <li><a href="#velocity-verification" id="toc-velocity-verification" class="nav-link" data-scroll-target="#velocity-verification">Velocity Verification</a></li>
+  <li><a href="#polling-v.s.-interrupts" id="toc-polling-v.s.-interrupts" class="nav-link" data-scroll-target="#polling-v.s.-interrupts">Polling v.s. Interrupts</a></li>
+  <li><a href="#flowchart" id="toc-flowchart" class="nav-link" data-scroll-target="#flowchart">Flowchart</a></li>
+  <li><a href="#schematic" id="toc-schematic" class="nav-link" data-scroll-target="#schematic">Schematic</a></li>
+  </ul></li>
+  <li><a href="#results-and-discussion" id="toc-results-and-discussion" class="nav-link" data-scroll-target="#results-and-discussion">Results and Discussion</a>
+  <ul class="collapse">
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul></li>
+  <li><a href="#ai-prototype-summary" id="toc-ai-prototype-summary" class="nav-link" data-scroll-target="#ai-prototype-summary">AI Prototype Summary</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -171,8 +193,284 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<!-- ![](elephant.png){fig-alt="A drawing of an elephant." fig-align="left" width=20%} -->
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>In Lab 5, we were tasked with utilizing an STM32L432KC in order to read values of a provided motor’s built-in quadrature encoder in order to determine the speed of the motor (in rev/s). This was done through the use of interrupts that read every rising and falling edge of both of the quad. encoder’s signals, A and B, and correctly handling/interpreting the data being read using an interrupt</p>
+</section>
+<section id="design-and-testing-methodology" class="level2">
+<h2 class="anchored" data-anchor-id="design-and-testing-methodology">Design and Testing Methodology</h2>
+<p>The overall approach here is simple: enable interrupts for two GPIO input pins and use those interrupts to either increment or decrement a counter depending on the direction and speed.</p>
+<section id="interrupts" class="level3">
+<h3 class="anchored" data-anchor-id="interrupts">Interrupts</h3>
+<p>In this implementation, the EXTI1 and EXTI2 fields within EXTICR1 were set to PA1 and PA2, respectively. Next, interrupts had to be enabled globally using the CMSIS provided <code>_enable_irq()</code> function. Using a mask bit, the IMR1 register was edited to allow for interrupts to be requested by our selected GPIO pins, while the RTSR1 and FTSR1 registers were modified to enable rising and falling edge triggers for the selected GPIO pins, respectively. Within the NVIC ISER register, EXTI interrupts were also enabled for PA1 and PA2.</p>
+<p>Within the handlers, there were four cases to consider: rising/falling edges of A, rising/falling edges of B. As seen in Figure 2, when A is leading, the motor is spinning CW, and while B is leading the motor is spinning CCW. Focusing on the rising and falling edges of the leading signal and comparing it to the value of the other signal at the same moment will allow us to calculate the direction of rotation. As seen in Figure 2, the behavior of a motor spinning CW can be described by the two scenarios: A is rising when B is zero, and A falls when B is 1. The other two scenarios come from flipping the signals which will produce the opposite cases, meaning that the motor is spinning CCW. We use these four cases within the interrupt handler in order to determine whether or not to increment or decrement the counter. Using the counter, the velocity is calculated by dividing the counter by 4*PPR (pulses per revolution) provided by the spec. sheet in Figure 1.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/motor_specsheet.jpg" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Figure 1. Specifications for quadrature encoder motor.</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/lab5_truthtable.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Figure 2. Truth table for the quadrature encoder</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="technical-documentation" class="level2">
+<h2 class="anchored" data-anchor-id="technical-documentation">Technical Documentation:</h2>
+<p>The Git repository containing the source code of this lab can be found here: <a href="https://github.com/jaredcarreno/e155-lab5.git">Lab 5 Repo</a>.</p>
+<section id="velocity-verification" class="level3">
+<h3 class="anchored" data-anchor-id="velocity-verification">Velocity Verification</h3>
+<p>The measured periods of the traces shown in Figure 3 were utilized to calculate the rev/s directly from the encoder’s output signal. I also recording a video of my motor spinning, calculated how long a single period was and utilized that value to calculate the revolutions per second. Calculations are shown in Figure 5.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/lab5_trace_AB.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Figure 3. Traces of A and B signal when motor is running CCW at 12.00 V.</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/lab5_trace_AB_allmeasure.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Figure 4. Measurements of A and B signal when motor is running CCW at 12.00 V.</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/lab5_calculations1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Figure 5. Velocity verification calculations (using traces and manual recordings).</figcaption>
+</figure>
+</div>
+</section>
+<section id="polling-v.s.-interrupts" class="level3">
+<h3 class="anchored" data-anchor-id="polling-v.s.-interrupts">Polling v.s. Interrupts</h3>
+<p>Given that interrupts are inherently faster since there are less processes, we already know that an interrupt-based approach is going to be faster than a polling-based approach. The issue arises in the fact that interrupts are event-driven while polling is time-driven. When an interrupt occurs, your pointer will jump into another address, the code will pause where the interrupt was triggered, and will jump back when it is done handling the interrupt. However, if we are polling every second, then in the time we are reading the values, we will miss a total of 4080 edges, since the code doesn’t pause while you’re reading any data (calculations shown in Figure 6).</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/lab5_calculations2.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Figure 6. Calculations for the number of edges missed when polling with a delay of 1000 ms (1 s).</figcaption>
+</figure>
+</div>
+</section>
+<section id="flowchart" class="level3">
+<h3 class="anchored" data-anchor-id="flowchart">Flowchart</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/lab5_flowchart.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Figure 7. Flowchart of the entire system.</figcaption>
+</figure>
+</div>
+</section>
+<section id="schematic" class="level3">
+<h3 class="anchored" data-anchor-id="schematic">Schematic</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/lab5_schematic.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Figure 8. Schematic of the hardware level implementation used to verify operation.</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="results-and-discussion" class="level2">
+<h2 class="anchored" data-anchor-id="results-and-discussion">Results and Discussion</h2>
+<!-- ### Testbench Simulation
+![Figure 3. Simulation of lab2_jc module used to verify operation.](images/lab2_testbench.png){fig-align="center" width=100%}
+
+![Figure 4. Simulation of mux module used to verify operation.](images/mux_testbench.png){fig-align="center" width=100%}
+
+![Figure 5. Simulation of seven_segment module used to verify operation.](images/sevensegment_testbench.png){fig-align="center" width=100%}
+-->
+<section id="conclusion" class="level3">
+<h3 class="anchored" data-anchor-id="conclusion">Conclusion</h3>
+</section>
+</section>
+<section id="ai-prototype-summary" class="level2">
+<h2 class="anchored" data-anchor-id="ai-prototype-summary">AI Prototype Summary</h2>
+<p>The code produced by the LLM appears to have a similar approach to my implementation, with a very noticeable difference being the use of UART clock. Even though my implementation uses printf(), it does so without a UART clock, so it’s interesting to see the AI take an approach with something I’ve never used before.</p>
+<pre><code>// ======================================================================
+// ============================================================================
+// main.c
+// Quadrature encoder using EXTI interrupts + UART printf + direction
+// ============================================================================
+
+#include "main.h"
+
+volatile int32_t encoder_count = 0;
+volatile int32_t last_encoder_count = 0;
+volatile float   encoder_velocity = 0.0f;
+volatile int8_t  encoder_dir = 0;       // 1 = CW, -1 = CCW, 0 = stopped
+volatile uint32_t print_counter = 0;
+
+// ---------------------------------------------------------------------------
+// UART2 initialization and printf redirection
+// ---------------------------------------------------------------------------
+void UART2_Init(void)
+{
+    // Enable GPIOA and USART2 clocks
+    RCC-&gt;AHB2ENR  |= RCC_AHB2ENR_GPIOAEN;
+    RCC-&gt;APB1ENR1 |= RCC_APB1ENR1_USART2EN;
+
+    // Configure PA2 (TX) and PA3 (RX) as AF7
+    GPIOA-&gt;MODER &amp;= ~(GPIO_MODER_MODE2_Msk | GPIO_MODER_MODE3_Msk);
+    GPIOA-&gt;MODER |=  (0x2 &lt;&lt; GPIO_MODER_MODE2_Pos) | (0x2 &lt;&lt; GPIO_MODER_MODE3_Pos);
+    GPIOA-&gt;AFR[0] &amp;= ~((0xF &lt;&lt; (2 * 4)) | (0xF &lt;&lt; (3 * 4)));
+    GPIOA-&gt;AFR[0] |=  (7 &lt;&lt; (2 * 4)) | (7 &lt;&lt; (3 * 4));  // AF7 = USART2
+
+    // Configure USART2: 115200 baud, 8N1
+    USART2-&gt;BRR = SystemCoreClock / 115200; // assuming APB1 = SystemCoreClock
+    USART2-&gt;CR1 = USART_CR1_TE | USART_CR1_RE | USART_CR1_UE;
+}
+
+// Retarget printf to USART2
+int __io_putchar(int ch)
+{
+    while (!(USART2-&gt;ISR &amp; USART_ISR_TXE)); // wait for TX buffer empty
+    USART2-&gt;TDR = ch;
+    return ch;
+}
+
+// ---------------------------------------------------------------------------
+// Encoder + EXTI setup
+// ---------------------------------------------------------------------------
+void Encoder_Init(void)
+{
+    RCC-&gt;AHB2ENR |= RCC_AHB2ENR_GPIOAEN;
+
+    // PA1 and PA2 as input with pull-ups
+    GPIOA-&gt;MODER &amp;= ~(GPIO_MODER_MODE1_Msk | GPIO_MODER_MODE2_Msk);
+    GPIOA-&gt;PUPDR &amp;= ~(GPIO_PUPDR_PUPD1_Msk | GPIO_PUPDR_PUPD2_Msk);
+    GPIOA-&gt;PUPDR |=  (1U &lt;&lt; GPIO_PUPDR_PUPD1_Pos) | (1U &lt;&lt; GPIO_PUPDR_PUPD2_Pos);
+
+    RCC-&gt;APB2ENR |= RCC_APB2ENR_SYSCFGEN;
+
+    // Map EXTI lines to PA1, PA2 (EXTI1, EXTI2)
+    SYSCFG-&gt;EXTICR[0] &amp;= ~(SYSCFG_EXTICR1_EXTI1_Msk | SYSCFG_EXTICR1_EXTI2_Msk);
+
+    EXTI-&gt;IMR1  |= (EXTI_IMR1_IM1 | EXTI_IMR1_IM2);
+    EXTI-&gt;RTSR1 |= (EXTI_RTSR1_RT1 | EXTI_RTSR1_RT2);
+    EXTI-&gt;FTSR1 |= (EXTI_FTSR1_FT1 | EXTI_FTSR1_FT2);
+
+    NVIC_SetPriority(EXTI1_IRQn, 2);
+    NVIC_EnableIRQ(EXTI1_IRQn);
+    NVIC_SetPriority(EXTI2_IRQn, 2);
+    NVIC_EnableIRQ(EXTI2_IRQn);
+}
+
+// ---------------------------------------------------------------------------
+// TIM2 1 ms periodic interrupt
+// ---------------------------------------------------------------------------
+void Timer2_Init(void)
+{
+    RCC-&gt;APB1ENR1 |= RCC_APB1ENR1_TIM2EN;
+
+    DELAY_TIM-&gt;PSC = (SystemCoreClock / 1000000) - 1; // 1 MHz tick
+    DELAY_TIM-&gt;ARR = 1000 - 1;                        // 1 ms overflow
+    DELAY_TIM-&gt;CNT = 0;
+    DELAY_TIM-&gt;DIER |= TIM_DIER_UIE;
+    DELAY_TIM-&gt;CR1  |= TIM_CR1_CEN;
+
+    NVIC_SetPriority(TIM2_IRQn, 3);
+    NVIC_EnableIRQ(TIM2_IRQn);
+}
+
+// ---------------------------------------------------------------------------
+// Compute velocity (called every 1 ms by TIM2 interrupt)
+// ---------------------------------------------------------------------------
+void compute_velocity(void)
+{
+    int32_t delta = encoder_count - last_encoder_count;
+    last_encoder_count = encoder_count;
+
+    // Determine direction based on delta sign
+    if (delta &gt; 0)      encoder_dir = 1;
+    else if (delta &lt; 0) encoder_dir = -1;
+    else                encoder_dir = 0;
+
+    // rev/s = delta / (PPR * 4 * 0.001s)
+    encoder_velocity = (float)delta / (PPR * 4.0f * 0.001f);
+}
+
+// ---------------------------------------------------------------------------
+// Encoder update helper
+// ---------------------------------------------------------------------------
+static inline void Encoder_Update(void)
+{
+    uint32_t A = (GPIOA-&gt;IDR &amp; (1 &lt;&lt; 1)) ? 1 : 0;
+    uint32_t B = (GPIOA-&gt;IDR &amp; (1 &lt;&lt; 2)) ? 1 : 0;
+
+    if (A == B)
+        encoder_count++;
+    else
+        encoder_count--;
+}
+
+// ---------------------------------------------------------------------------
+// Interrupt Handlers
+// ---------------------------------------------------------------------------
+void EXTI1_IRQHandler(void)
+{
+    if (EXTI-&gt;PR1 &amp; EXTI_PR1_PIF1)
+    {
+        EXTI-&gt;PR1 = EXTI_PR1_PIF1;
+        Encoder_Update();
+    }
+}
+
+void EXTI2_IRQHandler(void)
+{
+    if (EXTI-&gt;PR1 &amp; EXTI_PR1_PIF2)
+    {
+        EXTI-&gt;PR1 = EXTI_PR1_PIF2;
+        Encoder_Update();
+    }
+}
+
+void TIM2_IRQHandler(void)
+{
+    if (DELAY_TIM-&gt;SR &amp; TIM_SR_UIF)
+    {
+        DELAY_TIM-&gt;SR &amp;= ~TIM_SR_UIF;
+
+        compute_velocity();
+
+        // Print every 100 ms
+        print_counter++;
+        if (print_counter &gt;= 100)
+        {
+            print_counter = 0;
+
+            if (encoder_dir == 0)
+                printf("Stopped (0.00 rev/s)\r\n");
+            else
+                printf("Speed: %.2f rev/s (%s)\r\n",
+                       encoder_velocity * encoder_dir,   // signed speed
+                       (encoder_dir &gt; 0) ? "CW" : "CCW");
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Main
+// ---------------------------------------------------------------------------
+int main(void)
+{
+    SystemCoreClockUpdate();
+    UART2_Init();
+    Encoder_Init();
+    Timer2_Init();
+
+    printf("\r\nQuadrature Encoder + Direction Test Start\r\n");
+
+    while (1)
+    {
+        __WFI(); // Sleep until interrupt
+    }
+}</code></pre>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

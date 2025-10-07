@@ -146,8 +146,25 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#design-and-testing-methodology" id="toc-design-and-testing-methodology" class="nav-link" data-scroll-target="#design-and-testing-methodology">Design and Testing Methodology</a></li>
+  <li><a href="#technical-documentation" id="toc-technical-documentation" class="nav-link" data-scroll-target="#technical-documentation">Technical Documentation:</a>
+  <ul class="collapse">
+  <li><a href="#derivations-and-calculations" id="toc-derivations-and-calculations" class="nav-link" data-scroll-target="#derivations-and-calculations">Derivations and Calculations</a></li>
+  <li><a href="#schematic" id="toc-schematic" class="nav-link" data-scroll-target="#schematic">Schematic</a></li>
+  </ul></li>
+  <li><a href="#results-and-discussion" id="toc-results-and-discussion" class="nav-link" data-scroll-target="#results-and-discussion">Results and Discussion</a>
+  <ul class="collapse">
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul></li>
+  <li><a href="#ai-prototype-summary" id="toc-ai-prototype-summary" class="nav-link" data-scroll-target="#ai-prototype-summary">AI Prototype Summary</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -171,8 +188,80 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<!-- ![](elephant.png){fig-alt="A drawing of an elephant." fig-align="left" width=20%} -->
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>For Lab 4, we were tasked with programming our MCU to play music by producing a square wave that was then sent to a GPIO pin. This was done using timers that dictated the state of the GPIO pin, which creates a square wave with the correct frequency and duration.</p>
+</section>
+<section id="design-and-testing-methodology" class="level2">
+<h2 class="anchored" data-anchor-id="design-and-testing-methodology">Design and Testing Methodology</h2>
+<p>The design utilizes two timers, TIM15 and TIM16. These two timers have both a GPIO mode and PWM mode, which is what we want, but they also have the same registers, which will simplify the creation of our structs. The two timers start initially at the frequency of the system clock, f<sub>sys</sub> = 80 MHz, but are divided differently. The PWM timer has a PSC of 7, which allows for a precise measurement of the timing, while the duration timer has a PSC of 7999, which allows for higher frequency resolution. This can be seen by reducing the PSC for both and seeing the wrong frequencies being produced and/or the note duration being too short if the clock is too fast.</p>
+<p>Using the equations shown in Figures 1 and 2, we took advantage of the ARR (auto-reload register) which sets a value at which we want the timer’s counters to stop and reset. The pulse will stay HIGH until the counter counts to the value of ARR. This can be changed using the CCR1 register, which is set to half of the ARR value, meaning that the wave is set LOW when the counter reaches half of the ARR value. This produces a wave with 50 percent duty-cycle.</p>
+</section>
+<section id="technical-documentation" class="level2">
+<h2 class="anchored" data-anchor-id="technical-documentation">Technical Documentation:</h2>
+<p>The Git repository containing the source code of this lab can be found here: <a href="https://github.com/jaredcarreno/e155-lab4.git">Lab 4 Repo</a>.</p>
+<section id="derivations-and-calculations" class="level3">
+<h3 class="anchored" data-anchor-id="derivations-and-calculations">Derivations and Calculations</h3>
+<p>Figures 1 and 2 showcase derivation for equations that were used to determine ARR, as well as the period and the frequency of the note the system is outputting, T<sub>note</sub> and f<sub>note</sub>. In Figure 3, we have the maximum/minimum frequency and duration calculations that provide justification as to why we decided to choose these prescaler <code>PSC</code> values. The reason why the PSC value is so important is mentioned in the Design and Testing Methodology section.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/lab4_derivations.jpg" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Figure 1. Equations representing ARR and the resultant period, T<sub>period</sub>, derived using the given equation for F<sub>CNT</sub></figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/lab4_derivations2.jpg" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Figure 2. Derivation of ARR in terms of ticks per millisecond and the period of the note, T<sub>note</sub>. Equation for T<sub>note</sub> and f<sub>note</sub> also derived.</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/lab4_min_max_calculations.jpg" class="img-fluid figure-img" style="width:200.0%"></p>
+<figcaption>Figure 3. Minimum/maximum frequency and duration calculations.</figcaption>
+</figure>
+</div>
+</section>
+<section id="schematic" class="level3">
+<h3 class="anchored" data-anchor-id="schematic">Schematic</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/lab4_schematic.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Figure 4. Schematic of the hardware level implementation used to verify operation.</figcaption>
+</figure>
+</div>
+<p>Using an LM386 audio amplifier, the signal was amplified and could be controlled using a potentiometer. As shown in Figure 4, a circuit provided in amp’s datasheet is utilized in order to successfully amplify and control the volume of the signal</p>
+</section>
+</section>
+<section id="results-and-discussion" class="level2">
+<h2 class="anchored" data-anchor-id="results-and-discussion">Results and Discussion</h2>
+<p>The MCU was able to produce the correct frequencies that were provided to it for the exact duration that was specified for each note. While there were no testbenches for this specific lab, the notes and their durations were accurate using the selected values for PSC and ARR, as shown in Figure 5. Debugging here was important, so using Segger’s build and debug mode and forcing the pin to output one specific frequency was definitely very crucial to ensuring correct implementation.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/lab4_percenterrorcalcs.png" class="img-fluid figure-img" style="width:400.0%"></p>
+<figcaption>Figure 5. Spreadsheet showcasing the percent-error calculations for the frequency produced by the system.</figcaption>
+</figure>
+</div>
+<!-- ### Testbench Simulation
+![Figure 3. Simulation of lab2_jc module used to verify operation.](images/lab2_testbench.png){fig-align="center" width=100%}
+
+![Figure 4. Simulation of mux module used to verify operation.](images/mux_testbench.png){fig-align="center" width=100%}
+
+![Figure 5. Simulation of seven_segment module used to verify operation.](images/sevensegment_testbench.png){fig-align="center" width=100%}
+-->
+<section id="conclusion" class="level3">
+<h3 class="anchored" data-anchor-id="conclusion">Conclusion</h3>
+<p>The lab seemed to have no issues and was able to successfully play both Fur Elise and Mary Had a Little Lamb, but is not limited to either. This lab was definitely very difficult due to the abundance of information that had to be absorbed in order to understand what was going on. Now, I feel very able to set up registers and look through the manuals to find the correct information.</p>
+</section>
+</section>
+<section id="ai-prototype-summary" class="level2">
+<h2 class="anchored" data-anchor-id="ai-prototype-summary">AI Prototype Summary</h2>
+<p>The AI was able to produce a pretty sensible response. I would attribute this to the fact that the information of our STM32 MCU is readily available, along with plenty of examples that the LLM can draw on. I will say that the AI did not mention the EGR register, which is crucial for this implementation to function properly. The LLM’s response is shown below:</p>
+<p><img src="images/aiproto1.png" class="img-fluid quarto-figure quarto-figure-center" style="width:100.0%"> <img src="images/aiproto2.png" class="img-fluid quarto-figure quarto-figure-center" style="width:100.0%"> <img src="images/aiproto4.png" class="img-fluid quarto-figure quarto-figure-center" style="width:100.0%"> <img src="images/aiproto5.png" class="img-fluid quarto-figure quarto-figure-center" style="width:100.0%"></p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

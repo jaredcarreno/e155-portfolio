@@ -146,8 +146,25 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#design-and-testing-methodology" id="toc-design-and-testing-methodology" class="nav-link" data-scroll-target="#design-and-testing-methodology">Design and Testing Methodology</a></li>
+  <li><a href="#technical-documentation" id="toc-technical-documentation" class="nav-link" data-scroll-target="#technical-documentation">Technical Documentation:</a>
+  <ul class="collapse">
+  <li><a href="#block-diagram-and-fsms" id="toc-block-diagram-and-fsms" class="nav-link" data-scroll-target="#block-diagram-and-fsms">Block Diagram and FSMs</a></li>
+  <li><a href="#schematic" id="toc-schematic" class="nav-link" data-scroll-target="#schematic">Schematic</a></li>
+  </ul></li>
+  <li><a href="#results-and-discussion" id="toc-results-and-discussion" class="nav-link" data-scroll-target="#results-and-discussion">Results and Discussion</a>
+  <ul class="collapse">
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul></li>
+  <li><a href="#ai-prototype-summary" id="toc-ai-prototype-summary" class="nav-link" data-scroll-target="#ai-prototype-summary">AI Prototype Summary</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -171,8 +188,394 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<!-- ![](elephant.png){fig-alt="A drawing of an elephant." fig-align="left" width=20%} -->
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>In Lab 3, we were tasked with utilizing a keypad that is very prone to mechanical debouncing in order to display numbers on a dual seven segment display that shifted from left to right as new inputs were introduced. This builds on concepts that were utilized in Labs 1 and 2.</p>
+</section>
+<section id="design-and-testing-methodology" class="level2">
+<h2 class="anchored" data-anchor-id="design-and-testing-methodology">Design and Testing Methodology</h2>
+<p>The system was broken down into two FSMs: the scan FSM and debounce FSM:</p>
+<p>As shown in Figure 3, the debounce FSM waits for <code>keyPressed</code> to be high, when it detects that it is high, it goes into <code>S1</code> that enables a counter. Once the counter reaches 50ms and <code>keyPressed</code> is still high, then it moves onto <code>S2</code> that sets <code>pulse</code> HIGH, indicating that there is a valid key press than can be displayed. If the key is still pressed after it is registered, <code>keyPressed</code> is still HIGH, so the FSM stays in S3 until the key is released, which restarts the FSM waiting for a valid press.</p>
+<p>As shown in Figure 2, the scan FSM drives the columns and has a corresponding state for each row and column combination. Using <code>row[3:0]</code>, it will jump to the state that corresponds to the column and row, and will set the corresponding column high using <code>colOn[3:0]</code>, which cycles through one-hot encodings that enable each column, as the each state outputs <code>row_col = {row, colOn}</code>. The way this is designed ensures that there will be no states where multiple rows are pressed, attempting to limit the possibility of the wrong digits being shown</p>
+</section>
+<section id="technical-documentation" class="level2">
+<h2 class="anchored" data-anchor-id="technical-documentation">Technical Documentation:</h2>
+<p>The Git repository containing the source code of this lab can be found here: <a href="https://github.com/jaredcarreno/e155-lab3.git">Lab 3 Repo</a>.</p>
+<section id="block-diagram-and-fsms" class="level3">
+<h3 class="anchored" data-anchor-id="block-diagram-and-fsms">Block Diagram and FSMs</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/lab3_blockdiagram.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Figure 1. Block diagram visualizing the modules contained within the top module, lab3_jc</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/lab3_scanfsm.jpg" class="img-fluid figure-img" style="width:200.0%"></p>
+<figcaption>Figure 2. FSM for scan module</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/lab3_debounce_FSM.jpg" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Figure 3. FSM for debounce module</figcaption>
+</figure>
+</div>
+</section>
+<section id="schematic" class="level3">
+<h3 class="anchored" data-anchor-id="schematic">Schematic</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/lab3_schematic.jpg" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Figure 4. Schematic of the hardware level implementation used to verify operation.</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="results-and-discussion" class="level2">
+<h2 class="anchored" data-anchor-id="results-and-discussion">Results and Discussion</h2>
+<p>While there were no testbenches to verify using simulation, the hardware was mostly functional – shifting numbers from right to left (previous to most recent), only registering first key that is pressed, and display the second number held in the same column once the first is released. However, there is a issue when we attempt to switch to a different column from the same row, in which it won’t register the second press if two keys in the same row are pressed at the same time then the first one is released. Overall, it’s a pretty proficient implementation that will be improved on eventually.</p>
+<!-- ### Testbench Simulation
+![Figure 3. Simulation of lab2_jc module used to verify operation.](images/lab2_testbench.png){fig-align="center" width=100%}
+
+![Figure 4. Simulation of mux module used to verify operation.](images/mux_testbench.png){fig-align="center" width=100%}
+
+![Figure 5. Simulation of seven_segment module used to verify operation.](images/sevensegment_testbench.png){fig-align="center" width=100%}
+-->
+<section id="conclusion" class="level3">
+<h3 class="anchored" data-anchor-id="conclusion">Conclusion</h3>
+<p>My final product was able to successfully work – to an extent, which is further explained in the Results and Discussion section. Overall, this lab took 60+ hours to complete.</p>
+</section>
+</section>
+<section id="ai-prototype-summary" class="level2">
+<h2 class="anchored" data-anchor-id="ai-prototype-summary">AI Prototype Summary</h2>
+<p>The code produced by the AI contained a lot of syntax errors that did not allow it to synthesize. Notably, it was attempting to find an ‘out’ port, which is not something that our modules are set up to have. There were originally some errors, like the AI creating modules of the same name, but even with some of my intervention the syntax errors were still prominent. The code is shown below:</p>
+<p>` module clock_divider( input logic clk, // 20 MHz input clock input logic rst_n, // Active low reset output logic scan_clk // Divided clock (100–200 Hz) ); // Target clock frequency: 100 Hz // Divider for 20 MHz: 20 MHz / 100 Hz = 200,000 logic [18:0] counter; // 19-bit counter for clock division</p>
+<pre><code>always_ff @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+        counter &lt;= 0;
+        scan_clk &lt;= 0;
+    end else begin
+        if (counter == 199_999) begin
+            counter &lt;= 0;
+            scan_clk &lt;= ~scan_clk;  // Toggle scan clock
+        end else begin
+            counter &lt;= counter + 1;
+        end
+    end
+end</code></pre>
+<p>endmodule</p>
+<p>module keypad_scanner1( input logic clk, // Clock input (scan clock) input logic rst_n, // Active low reset input logic [3:0] rows, // Row signals (active low) output logic [3:0] cols, // Column signals (active low) output logic [3:0] key // Output the detected key (hex value) ); // State machine for scanning rows and columns typedef enum logic [1:0] { IDLE = 2’b00, SCAN = 2’b01, DEBOUNCE = 2’b10 } state_t;</p>
+<pre><code>state_t state, next_state;
+logic [3:0] column_reg, last_cols;
+logic [3:0] key_reg, last_key;
+logic key_pressed;
+
+always_ff @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+        state &lt;= IDLE;
+        cols &lt;= 4'b1111;  // All columns inactive
+        key_reg &lt;= 4'b0000;
+        last_cols &lt;= 4'b1111;
+    end else begin
+        state &lt;= next_state;
+    end
+end
+
+// State machine logic
+always_ff @(state or column_reg or rows or last_cols) begin
+    case (state)
+        IDLE: begin
+            next_state = SCAN;
+            cols = 4'b1111;  // All columns inactive
+        end
+        SCAN: begin
+            // Cycle through columns, one active at a time
+            if (column_reg == 4'b1110) column_reg = 4'b1101;
+            else if (column_reg == 4'b1101) column_reg = 4'b1011;
+            else if (column_reg == 4'b1011) column_reg = 4'b0111;
+            else column_reg = 4'b1111;
+            cols = column_reg;  // Set current column
+            key_pressed = |(rows &amp; ~cols);  // Detect key press based on row signals
+            if (key_pressed) begin
+                key_reg = rows; // Register key press based on row active
+                next_state = DEBOUNCE;
+            end else begin
+                next_state = SCAN;
+            end
+        end
+        DEBOUNCE: begin
+            // Debounce the key by ensuring release before registering new key
+            if (~|(rows &amp; ~cols)) begin  // No key pressed
+                next_state = SCAN;
+            end else begin
+                next_state = DEBOUNCE;
+            end
+        end
+        default: next_state = IDLE;
+    endcase
+end
+
+// Output the detected key
+always_ff @(posedge clk) begin
+    if (key_pressed) key = key_reg;
+    else key = last_key;
+end</code></pre>
+<p>endmodule</p>
+<p>module keypad_one_shot_registration( input logic clk, // Clock input input logic rst_n, // Active low reset input logic [3:0] rows, // Row signals from keypad (active low) output logic new_key, // Single-cycle pulse for new key press output logic [3:0] key_code // Detected key code (hex value) ); // State machine states typedef enum logic [1:0] { IDLE = 2’b00, PRESSED = 2’b01, RELEASED = 2’b10 } state_t;</p>
+<pre><code>state_t state, next_state;  // Current and next states
+logic [3:0] last_key;       // Store the last detected key
+logic [3:0] current_key;    // Store the current key being pressed
+
+// Key detection: any active row means a key is pressed
+always_ff @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+        state &lt;= IDLE;
+        new_key &lt;= 0;
+        last_key &lt;= 4'b0000;
+        key_code &lt;= 4'b0000;
+    end else begin
+        state &lt;= next_state;
+    end
+end
+
+// Logic for key detection (rows are active low, check if any row is pressed)
+always_ff @(posedge clk) begin
+    if (state == IDLE &amp;&amp; ~(|rows)) begin
+        // Detect the key code when a key is pressed (active low rows)
+        current_key &lt;= ~rows;
+    end
+end
+
+// State transition and new key pulse generation
+always_ff @(posedge clk) begin
+    case (state)
+        IDLE: begin
+            if (~(|rows)) begin  // Detect key press (any active row)
+                next_state &lt;= PRESSED;
+                new_key &lt;= 1;  // Generate a one-shot pulse
+            end else begin
+                next_state &lt;= IDLE;
+                new_key &lt;= 0;  // No new key, reset pulse
+            end
+        end
+
+        PRESSED: begin
+            if (~(|rows)) begin  // Key is still pressed
+                next_state &lt;= PRESSED;
+                new_key &lt;= 0;  // No new key until key is released
+            end else begin
+                next_state &lt;= RELEASED;  // Key released, move to RELEASED state
+            end
+        end
+
+        RELEASED: begin
+            if (~(|rows)) begin  // Key press has been released
+                next_state &lt;= IDLE;
+                key_code &lt;= current_key;  // Capture the key code
+                last_key &lt;= current_key;
+            end else begin
+                next_state &lt;= RELEASED;
+            end
+        end
+
+        default: begin
+            next_state &lt;= IDLE;
+        end
+    endcase
+end</code></pre>
+<p>endmodule</p>
+<p>module keypad_scanner2( input logic clk, // Clock input (divided clock) input logic rst_n, // Active low reset input logic [3:0] rows, // Row signals from keypad (active low) output logic [3:0] key_code, // Detected key code (4-bit hex value) output logic key_pressed // Boolean indicating key press status );</p>
+<pre><code>// Define FSM states
+typedef enum logic [1:0] {
+    SCAN_IDLE = 2'b00,         // Wait for key press
+    SCAN_COL_0 = 2'b01,        // Scan column 0
+    SCAN_COL_1 = 2'b10,        // Scan column 1
+    SCAN_COL_2 = 2'b11         // Scan column 2
+} state_t;
+
+state_t state, next_state;    // Current and next states
+logic [3:0] col_mask;         // Column select mask
+logic [3:0] detected_key;     // Detected key code (4 bits)
+
+// State machine for scanning columns
+always_ff @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+        state &lt;= SCAN_IDLE;
+        col_mask &lt;= 4'b1111;  // All columns inactive initially
+    end else begin
+        state &lt;= next_state;
+    end
+end
+
+// Column scanning logic: one column is active (low) at a time
+always_ff @(posedge clk) begin
+    case (state)
+        SCAN_IDLE: begin
+            col_mask &lt;= 4'b1111;  // No column active
+        end
+        SCAN_COL_0: begin
+            col_mask &lt;= 4'b1110;  // Only column 0 is active (low)
+        end
+        SCAN_COL_1: begin
+            col_mask &lt;= 4'b1101;  // Only column 1 is active (low)
+        end
+        SCAN_COL_2: begin
+            col_mask &lt;= 4'b1011;  // Only column 2 is active (low)
+        end
+        default: begin
+            col_mask &lt;= 4'b1111;  // Default: no column active
+        end
+    endcase
+end
+
+// Detect the key code based on the active column and row signals
+always_ff @(posedge clk) begin
+    case (state)
+        SCAN_COL_0: begin
+            if (~rows[0]) detected_key &lt;= 4'b0001;  // Row 0, Column 0
+            else if (~rows[1]) detected_key &lt;= 4'b0100;  // Row 1, Column 0
+            else if (~rows[2]) detected_key &lt;= 4'b0111;  // Row 2, Column 0
+            else if (~rows[3]) detected_key &lt;= 4'b1000;  // Row 3, Column 0
+        end
+        SCAN_COL_1: begin
+            if (~rows[0]) detected_key &lt;= 4'b0010;  // Row 0, Column 1
+            else if (~rows[1]) detected_key &lt;= 4'b0101;  // Row 1, Column 1
+            else if (~rows[2]) detected_key &lt;= 4'b0110;  // Row 2, Column 1
+            else if (~rows[3]) detected_key &lt;= 4'b1001;  // Row 3, Column 1
+        end
+        SCAN_COL_2: begin
+            if (~rows[0]) detected_key &lt;= 4'b0011;  // Row 0, Column 2
+            else if (~rows[1]) detected_key &lt;= 4'b0110;  // Row 1, Column 2
+            else if (~rows[2]) detected_key &lt;= 4'b0111;  // Row 2, Column 2
+            else if (~rows[3]) detected_key &lt;= 4'b1011;  // Row 3, Column 2
+        end
+        default: detected_key &lt;= 4'b0000; // Default: no key detected
+    endcase
+end
+
+// Key press indicator: Any key pressed when one of the rows is active
+always_ff @(posedge clk) begin
+    if (~(|rows))  // If any row is active, a key is pressed
+        key_pressed &lt;= 1'b1;
+    else
+        key_pressed &lt;= 1'b0;
+end
+
+// Output the detected key code
+always_ff @(posedge clk) begin
+    key_code &lt;= detected_key;
+end
+
+// State machine transitions: cycle through the columns
+always_ff @(posedge clk) begin
+    case (state)
+        SCAN_IDLE: next_state &lt;= SCAN_COL_0;
+        SCAN_COL_0: next_state &lt;= SCAN_COL_1;
+        SCAN_COL_1: next_state &lt;= SCAN_COL_2;
+        SCAN_COL_2: next_state &lt;= SCAN_IDLE;
+        default: next_state &lt;= SCAN_IDLE;
+    endcase
+end</code></pre>
+<p>endmodule</p>
+<p>module top_level ( input logic clk, // Clock from internal oscillator input logic rst_n, // Active low reset input logic [3:0] rows, // Row signals from keypad (active low) output logic [6:0] seg_a, // Seven segment display segments for first digit output logic [6:0] seg_b, // Seven segment display segments for second digit output logic an0, // Enable signal for first digit output logic an1 // Enable signal for second digit );</p>
+<pre><code>// Signals for keypad scanner and one-shot registration
+logic [3:0] key_code;         // Detected key code
+logic new_key;                // New key detected (one-shot signal)
+logic key_pressed;            // Key pressed indicator
+
+// Signals for last two keys
+logic [3:0] most_recent_key;  // Most recent key (new key)
+logic [3:0] older_key;        // Older key (last key)
+
+// Signals for 7-segment display
+logic [3:0] display_digit;    // Digit to be displayed on the multiplexed display
+logic mux_select;             // Multiplexer to select which digit to display
+
+// Instantiate the keypad scanner
+keypad_scanner2 scanner (
+    .clk(clk),
+    .rst_n(rst_n),
+    .rows(rows),
+    .key_code(key_code),
+    .key_pressed(key_pressed)
+);
+
+// Instantiate the keypad one-shot registration module
+keypad_one_shot_registration one_shot (
+    .clk(clk),
+    .rst_n(rst_n),
+    .rows(rows),
+    .new_key(new_key),
+    .key_code(key_code)
+);
+
+// Process for shifting the last two keys (older &lt;- most recent; most recent &lt;- new)
+always_ff @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+        most_recent_key &lt;= 4'b0000;
+        older_key &lt;= 4'b0000;
+    end else if (new_key) begin
+        // Shift the keys when a new key is detected
+        older_key &lt;= most_recent_key;
+        most_recent_key &lt;= key_code;
+    end
+end
+
+// Clock divider logic to generate a slower clock for display multiplexing
+logic clk_display;
+reg [15:0] clk_divider;  // Divider for the clock (adjust for desired multiplexing rate)
+always_ff @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+        clk_divider &lt;= 16'b0;
+        clk_display &lt;= 0;
+    end else begin
+        // Divide the clock to get a slower rate (e.g., 60 Hz for multiplexing)
+        if (clk_divider == 16'd49999) begin  // Adjust this value for desired rate
+            clk_divider &lt;= 16'b0;
+            clk_display &lt;= ~clk_display;  // Toggle the display clock
+        end else begin
+            clk_divider &lt;= clk_divider + 1'b1;
+        end
+    end
+end
+
+// Multiplexed display logic: alternate between displaying the two digits
+always_ff @(posedge clk_display or negedge rst_n) begin
+    if (!rst_n) begin
+        mux_select &lt;= 0;
+        display_digit &lt;= 4'b0000;
+        an0 &lt;= 1;
+        an1 &lt;= 0;
+    end else begin
+        if (mux_select) begin
+            display_digit &lt;= most_recent_key;
+            an0 &lt;= 0;
+            an1 &lt;= 1;  // Enable second digit
+        end else begin
+            display_digit &lt;= older_key;
+            an0 &lt;= 1;  // Enable first digit
+            an1 &lt;= 0;
+        end
+        mux_select &lt;= ~mux_select;  // Toggle between the two digits
+    end
+end
+
+// Instantiate the seven-segment display decoder for both digits
+seven_segment seg1(
+    .in(display_digit),
+    .out(seg_a)
+);
+
+seven_segment seg2(
+    .in(display_digit),
+    .out(seg_b)
+);</code></pre>
+<p>endmodule</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
