@@ -16,7 +16,7 @@ Within the handlers, there were four cases to consider: rising/falling edges of 
 
 ![Figure 1. Specifications for quadrature encoder motor.](images/motor_specsheet.jpg){fig-align="center" width=100%}
 
-![Figure 2. Truth table for the quadrature encoder](images/lab5_truthtable.png){fig-align="center" width=100%}
+![Figure 2. Truth table for output signals of quadrature encoder motor.](images/lab5_truthtable.png)
 
 ## Technical Documentation:
 The Git repository containing the source code of this lab can be found here: [Lab 5 Repo](https://github.com/jaredcarreno/e155-lab5.git).
@@ -42,8 +42,57 @@ Given that interrupts are inherently faster since there are less processes, we a
 ![Figure 8. Schematic of the hardware level implementation used to verify operation.](images/lab5_schematic.png){fig-align="center" width=100%}
 
 ## Results and Discussion
+Running my implementation yielded the correct result -- a speed close to 2.5 rev/s! The terminal output is shown below. I noticed that there was a large variability when it came to having motors that actually ran at the rated speed of 2.5 rev/s. Most motors I tested ran a little faster (2.67, 2.8, 2.9 rev/s) with only a single one running at 2.5 rev/s.
 
-
+### Terminal Output
+```
+counter: 0 
+The motor is spinning at 0.000000 rev/s 
+counter: 0 
+The motor is spinning at 0.000000 rev/s 
+counter: 0 
+The motor is spinning at 0.000000 rev/s 
+counter: 0 
+The motor is spinning at 0.000000 rev/s 
+counter: 0 
+The motor is spinning at 0.000000 rev/s 
+counter: -3708 
+The motor is spinning at -2.271446 rev/s 
+counter: -4371 
+The motor is spinning at -2.677696 rev/s 
+counter: -4374 
+The motor is spinning at -2.678921 rev/s 
+counter: -4372 
+The motor is spinning at -2.678309 rev/s 
+counter: -4374 
+The motor is spinning at -2.679534 rev/s 
+counter: -4374 
+The motor is spinning at -2.680147 rev/s 
+counter: -4376 
+The motor is spinning at -2.680760 rev/s 
+counter: -4376 
+The motor is spinning at -2.680760 rev/s 
+counter: -4376 
+The motor is spinning at -2.680760 rev/s 
+counter: -4376 
+The motor is spinning at -2.680760 rev/s 
+counter: -4376 
+The motor is spinning at -2.681373 rev/s 
+counter: -4379 
+The motor is spinning at -2.682598 rev/s 
+counter: -4378 
+The motor is spinning at -2.681985 rev/s 
+counter: -4378 
+The motor is spinning at -2.681985 rev/s 
+counter: -4379 
+The motor is spinning at -2.682598 rev/s 
+counter: -3002 
+The motor is spinning at -1.839461 rev/s 
+counter: -25 
+The motor is spinning at -0.015319 rev/s 
+counter: 0 
+The motor is spinning at 0.000000 rev/s 
+```
 <!-- ### Testbench Simulation
 ![Figure 3. Simulation of lab2_jc module used to verify operation.](images/lab2_testbench.png){fig-align="center" width=100%}
 
@@ -53,9 +102,10 @@ Given that interrupts are inherently faster since there are less processes, we a
 -->
 
 ### Conclusion
+In conclusion, my implementation was able to successfully read the speed of a motor using its integrated quadrature encoder. This lab was really fun to do, as it demonstrated to me how to properly interface with hardware, as well as read data using a microcontroller's interrupts. Overall, this lab took roughly 15 hours to complete.
 
 ## AI Prototype Summary
-The code produced by the LLM appears to have a similar approach to my implementation, with a very noticeable difference being the use of  UART clock. Even though my implementation uses printf(), it does so without a UART clock, so it's interesting to see the AI take an approach with something I've never used before. 
+The code produced by the LLM appears to have a similar approach to my implementation, with a very noticeable difference being the use of  UART clock. Even though my implementation uses printf(), it does so without a UART clock, so it's interesting to see the AI take an approach with something I've never used before. After running the code on my setup, I determined that the AI implementation was a working one. Output from the AI implementation is shown below.
 
 ```
 // ======================================================================
@@ -237,4 +287,49 @@ int main(void)
         __WFI(); // Sleep until interrupt
     }
 }
+```
+### Terminal Output
+```
+Quadrature Encoder + Direction Test Start
+Stopped (0.00 rev/s)
+Stopped (0.00 rev/s)
+Stopped (0.00 rStopped (0.topped (0.00 rev/s)
+Stopped (0.00 rtopped (0.00 rev/s)
+0.00Sto0.00 rev/s)
+Speed: 0.61 rev/s (peedpeed: 0.61 rev/s (CCW)
+Stopped (0.00 repeedpeed: 0.61 rev/s (CCW)
+Stopped (0.0peed: 0.61 rev/s (CC(0.00 rev/s)
+Stoppe(0.0(0.00 rev/s)
+St(0.0d (0d (0.00 rev/s)
+Speed: 0.61 rev/s (CW)
+Stopd (0.00 rev/s)
+Speed: 0.61 rev/s (CW)
+Stopd (0.00 rev/s)
+Speed: 0.61 rev/s (CW)
+Stopd (0S0.00 rev/s)
+Speed: 0.61 rev/s (CW)
+Sto0.000.00 rev/s)
+Speed: 0.00 rev/s)
+Speed: 0.61 rev/s (CW)
+Stopped (0.00 rev/s)
+Speed: 0.61 rev/s (CCW)
+Stopped (0.00 rev/s)
+Stopped (0.00 rev/s)
+Speed: 0.61 rev/s (CW)
+Stopped (0.00 rev/s)
+Speed: 0.61 rev/s (CCW)
+Stopped (0.00 rev/s)
+Speed: 0.61 rev/s (CW)
+Stopped (0.00 rev/s)
+Stopped (0.00 rev/s)
+Speed: 0.61 rev/s (CCW)
+Stopped (0.00 rev/s)
+Speed: 0.61 rev/s (CW)
+Stopped (0.00 rev/s)
+Speed: 0.61 rev/s (CCW)
+Stopped (0.00 rev/s)
+Speed: 0.61 rev/s (CW)
+Stopped (0.00 rev/s)
+Stopped (0.00 rev/s)
+Stopped (0.00 rev/s)
 ```
