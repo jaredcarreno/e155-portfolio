@@ -1,5 +1,6 @@
 ---
-title: "E155 Portfolio"
+title: "Engineering Portfolio"
+subtitle: "Jared Carreno"
 image: images/headshot.jpg
 about:
     template: solana
